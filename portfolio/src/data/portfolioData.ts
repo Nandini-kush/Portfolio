@@ -84,7 +84,7 @@ I am currently seeking internship opportunities in Software Engineering, Backend
       category: "AI/ML & Full Stack",
       githubLink: "https://github.com/Nandini-kush",
       liveLink: "#",
-      image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800"
+      image: "/projects/repoveda-home.jpg"
     },
     {
       title: "DocuMind",
@@ -100,7 +100,7 @@ I am currently seeking internship opportunities in Software Engineering, Backend
       category: "AI/RAG",
       githubLink: "https://github.com/Nandini-kush",
       liveLink: "#",
-      image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=800"
+      image: "/projects/documind-home.jpg"
     },
     {
       title: "YojnaSathi",
@@ -116,7 +116,7 @@ I am currently seeking internship opportunities in Software Engineering, Backend
       category: "Backend",
       githubLink: "https://github.com/Nandini-kush",
       liveLink: "#",
-      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800"
+      image: "/projects/yojnasathi-home.jpg"
     }
   ],
   experience: [

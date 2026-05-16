@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Section from './Section';
 import { Card, CardFooter, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
@@ -6,6 +6,31 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, Github, Database, Brain, CheckCircle2 } from 'lucide-react';
 import { portfolioData } from '@/data/portfolioData';
+
+const ProjectImage = ({ src, projectName }: { src: string, projectName: string }) => {
+  const [error, setError] = useState(false);
+
+  if (error || !src) {
+    return (
+      <div className="w-full h-full bg-secondary/30 flex items-center justify-center p-6 text-center">
+        <span className="text-muted-foreground font-semibold text-lg">{projectName}</span>
+      </div>
+    );
+  }
+
+  return (
+    <img 
+      src={src} 
+      alt={projectName} 
+      loading="lazy"
+      width={1200}
+      height={675}
+      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+      onError={() => setError(true)}
+      className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+    />
+  );
+};
 
 const Projects: React.FC = () => {
   return (
@@ -20,12 +45,8 @@ const Projects: React.FC = () => {
             transition={{ delay: i * 0.1, duration: 0.5 }}
           >
             <Card className="group overflow-hidden border-border/50 hover:border-primary/50 transition-all duration-300 h-full flex flex-col bg-card/50 glass shadow-md">
-              <div className="relative aspect-video overflow-hidden">
-                <img 
-                  src={project.image} 
-                  alt={project.title} 
-                  className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
-                />
+              <div className="relative aspect-video overflow-hidden rounded-t-2xl border-b border-border/10">
+                <ProjectImage src={project.image} projectName={project.title} />
                 <div className="absolute top-4 right-4 z-20">
                   <Badge variant="secondary" className="glass gap-1.5 backdrop-blur-xl bg-background/50 border-white/20">
                     {project.category.includes("AI") ? <Brain size={14} /> : <Database size={14} />}
