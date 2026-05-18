@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import { toast } from 'sonner';
@@ -10,8 +10,13 @@ import { portfolioData } from '@/data/portfolioData';
 
 const Contacts: React.FC = () => {
   const { personalInfo } = portfolioData;
-  const formRef = useRef<HTMLFormElement>(null);
   const [isSending, setIsSending] = useState(false);
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
 
   const contactInfo = [
     { icon: <Mail className="w-5 h-5" />, label: 'Email', value: personalInfo.email, href: `mailto:${personalInfo.email}` },
@@ -19,25 +24,37 @@ const Contacts: React.FC = () => {
     { icon: <MapPin className="w-5 h-5" />, label: 'Location', value: personalInfo.location, href: "#" },
   ];
 
-  const sendEmail = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formRef.current) return;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setIsSending(true);
 
     try {
-      await emailjs.sendForm(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID || '',
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '',
-        formRef.current,
-        import.meta.env.VITE_EMAILJS_PUBLIC_KEY || ''
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        {
+          from_name: form.name,
+          from_email: form.email,
+          message: form.message,
+        },
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       );
 
-      toast.success('Message sent successfully! I will get back to you soon.');
-      formRef.current.reset();
+      alert('Message sent successfully!');
+      setForm({
+        name: '',
+        email: '',
+        subject: '',
+        message: '',
+      });
     } catch (error) {
-      console.error('EmailJS Error:', error);
-      toast.error('Failed to send message. Please try again or email me directly.');
+      console.error(error);
+      alert('Failed to send message.');
     } finally {
       setIsSending(false);
     }
@@ -94,11 +111,13 @@ const Contacts: React.FC = () => {
         <div className="lg:col-span-2">
           <Card className="glass border-border/50 bg-card/50 shadow-2xl overflow-hidden shadow-sm">
             <CardContent className="p-8">
-              <form ref={formRef} className="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={sendEmail}>
+              <form className="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={handleSubmit}>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-foreground">Your Name</label>
                   <input 
-                    name="user_name"
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
                     type="text" 
                     placeholder="Nandini Kushwah" 
                     className="w-full h-12 px-4 rounded-xl bg-background border border-border focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all text-foreground"
@@ -108,7 +127,9 @@ const Contacts: React.FC = () => {
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-foreground">Email Address</label>
                   <input 
-                    name="user_email"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
                     type="email" 
                     placeholder="example@gmail.com" 
                     className="w-full h-12 px-4 rounded-xl bg-background border border-border focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all text-foreground"
@@ -119,6 +140,8 @@ const Contacts: React.FC = () => {
                   <label className="text-sm font-bold text-foreground">Subject</label>
                   <input 
                     name="subject"
+                    value={form.subject}
+                    onChange={handleChange}
                     type="text" 
                     placeholder="Internship Opportunity / Collaboration" 
                     className="w-full h-12 px-4 rounded-xl bg-background border border-border focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all text-foreground"
@@ -129,6 +152,8 @@ const Contacts: React.FC = () => {
                   <label className="text-sm font-bold text-foreground">Message</label>
                   <textarea 
                     name="message"
+                    value={form.message}
+                    onChange={handleChange}
                     rows={4} 
                     placeholder="Hi Nandini, I'd like to discuss..." 
                     className="w-full px-4 py-3 rounded-xl bg-background border border-border focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none text-foreground"
